@@ -5,28 +5,27 @@ let roundNumber = 1;
 
 const buttons = document.querySelector("#choices");
 const resultDiv = document.querySelector(".result");
-
-buttons.addEventListener("click", function(e){
-  const buttonPressed = e.target.id;
-  
-  if (roundNumber <= 5){
-    let cpuChoice = getComputerChoice();
-    playRound(buttonPressed, cpuChoice);
-    roundNumber++;
-  } else {
-    alert("Game complete. Restart Game.");
-    
-  }
-});
+const scoreDiv = document.querySelector(".scoreboard");
 
 function getComputerChoice() {
   let randoNumbo = Math.floor(Math.random()*3);
   return choices[randoNumbo];
 }
 
+function resetGame(){
+  humanScore = 0;
+  computerScore = 0;
+  roundNumber = 1;
+  updateScoreDiv();
+}
+
 function updateResultDiv(message, color){
   resultDiv.style.backgroundColor = color;
   resultDiv.textContent = message;
+}
+
+function updateScoreDiv(){
+  scoreDiv.textContent = `Round ${roundNumber} You: ${humanScore} vs CPU: ${computerScore}`;
 }
 
 function playRound(humanChoice, computerChoice) {
@@ -48,28 +47,16 @@ function playRound(humanChoice, computerChoice) {
   }
 }
 
-function playGame() {
-  for(let i = 1; i < 6; i++){
-    console.log(`Round ${i}!`)
-
-    let humChoice = getHumanChoice();
+buttons.addEventListener("click", function(e){
+  const buttonPressed = e.target.id;
+  
+  if (roundNumber <= 5){
     let cpuChoice = getComputerChoice();
-    console.log(`You chose: ${humChoice}  CPU chose: ${cpuChoice}`);
-
-    playRound(humChoice, cpuChoice);
-    console.log(`Current score: You: ${humanScore} vs CPU: ${computerScore}`);
+    playRound(buttonPressed, cpuChoice);
+    updateScoreDiv();
+    roundNumber++;
+  } else {
+    alert(`Game complete. Final Score: You ${humanScore} vs CPU: ${computerScore}`);
+    resetGame();
   }
-
-  if (humanScore > computerScore) {
-    console.log("You win!");
-  }
-  else if (computerScore > humanScore){
-    console.log("Unlucky mate :( maybe next time");
-  }
-  else {
-    console.log("And the game ends in a tieeeee!");
-  }
-}
-
-playRound();
-// playGame();
+});
